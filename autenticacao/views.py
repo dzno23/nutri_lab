@@ -65,7 +65,7 @@ def logar(request):
             return redirect('/auth/logar')
         else:
             auth.login(request, usuario)
-            return redirect('/')
+            return redirect('/pacientes')
         
     return render(request, 'logar.html')
 
@@ -77,13 +77,13 @@ def ativar_conta(request, token):
     token = get_object_or_404(Ativacao, token=token)
     if token.ativo:
         messages.add_message(request, constants.WARNING, 'Esse token já foi usado.')
-        return redirect('/auth/jogar')
+        return redirect('/auth/logar')
     
     user = User.objects.get(username=token.user.username)
     user.is_active = True
     user.save()
     token.ativo = True
-    token.dave()
+    token.save()
     
     messages.add_message(request, constants.SUCCESS, 'Conta ativada com sucesso.')
     return redirect('auth/logar')
